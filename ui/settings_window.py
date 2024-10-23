@@ -1,101 +1,42 @@
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QGridLayout, QLineEdit,QGroupBox,QTabWidget, QWidget, QFormLayout, QPushButton, QListWidget, QListWidgetItem, QMessageBox
-from handlers.options_handler import OptionsHandler
-from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QTabWidget, QPushButton
+from ui.settings import *
+from copy import deepcopy
 
 class SettingsWindow(QDialog):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("Налаштування")
-        self.json_handler = OptionsHandler()
-        self.initUI()
+    def __init__(self, options, main_window):
+        super().__init__(main_window)
+        self.setWindowTitle("Settings")
+        self.options = options
+        self.main_window = main_window
+        self.init_ui()
 
-    def initUI(self):
-        ### playground ###
-        main_layout = QGridLayout(self)
-        self.setLayout(main_layout)
-
-        tab = QTabWidget(self)
-
-        study_level_page = QWidget(self)
+    def init_ui(self):
+        self.options_copy = deepcopy(self.options)
         layout = QVBoxLayout()
-        study_level_page.setLayout(layout)
-        adding_groupbox = QGroupBox('Додати освітню ступінь (ОС)')
-        form_layout = QFormLayout()
-        adding_groupbox.setLayout(form_layout)
+        self.tab_widget = QTabWidget()
 
-        self.new_value_input = QLineEdit(adding_groupbox)
-        self.new_genitive_value_input = QLineEdit(adding_groupbox)
-
-        self.add_button = QPushButton("Додати значення")
-        self.add_button.clicked.connect(self.add_value)
-
-        form_layout.addRow("Назва ОС:", self.new_value_input)
-        form_layout.addRow("У родовому відмінку:", self.new_genitive_value_input)
-        form_layout.addRow(self.add_button)
-
-        layout.addWidget(adding_groupbox)
-
-        deleting_groupbox = QGroupBox('Видалити освітню ступінь (ОС)')
-        form_layout = QFormLayout()
-        deleting_groupbox.setLayout(form_layout)
-
-        self.values_list = QListWidget()
-        self.load_values()
-
-        self.remove_button = QPushButton("Видалити вибране")
-        self.remove_button.clicked.connect(self.remove_value)
-
-        form_layout.addRow(self.values_list)
-        form_layout.addRow(self.remove_button)
-
-        layout.addWidget(deleting_groupbox)
-
-        # self.setLayout(layout)
-
-        study_form_page = QWidget(self)
-        layout = QVBoxLayout()
-        study_form_page.setLayout(layout)
-        adding_form_groupbox = QGroupBox('Додати форму навчання')
-        form_layout = QFormLayout()
-        adding_form_groupbox.setLayout(form_layout)
-        form_layout.addRow('First Name:', QLineEdit(adding_form_groupbox))
-        form_layout.addRow('Last Name:', QLineEdit(adding_form_groupbox))
-        layout.addWidget(adding_form_groupbox)
-
-        tab.addTab(study_level_page, "Освітній ступінь")
-        tab.addTab(study_form_page, "Форма навчання")
-
-        main_layout.addWidget(tab, 0, 0, 2, 1)
-
-    def load_values(self):
-        options = self.json_handler.load_options("study_levels")
-        self.values_list.clear()
-        options_data = [{ "text": f"{option['name']} ({option['name_genitive']})", "obj": option } for option in options]
-        for data in options_data:
-            item = QListWidgetItem()
-            item.setText(data["text"])
-            item.setData(Qt.ItemDataRole.UserRole, data["obj"])
-            self.values_list.addItem(item)
-        # self.values_list.addItems([f"{option['name']} ({option['name_genitive']})" for option in options])
-
-    def add_value(self):
-        new_value = {
-            "name": self.new_value_input.text(),
-            "name_genitive": self.new_genitive_value_input.text()
-        }
+        self.tab_widget.addTab(EducationDateWidget(self.options_copy), "Роки")
+        self.tab_widget.addTab(EducationDegreeWidget(self.options_copy), "Ступінь")
+        self.tab_widget.addTab(EducationFormatWidget(self.options_copy), "Форма")
+        self.tab_widget.addTab(EducationSpecializationWidget(self.options_copy), "Галузь\\Спеціалізація")
         
-        if new_value:
-            self.json_handler.add_option("study_levels", new_value)
-            self.load_values()
-            self.new_value_input.clear()
-            self.new_genitive_value_input.clear()
-        else:
-            QMessageBox.warning(self, "Помилка", "Введіть значення для додавання!")
+        layout.addWidget(self.tab_widget)
 
-    def remove_value(self):
-        selected_item = self.values_list.currentItem()
-        if selected_item:
-            self.json_handler.remove_option("study_levels", selected_item.data(Qt.ItemDataRole.UserRole))
-            self.load_values()
-        else:
-            QMessageBox.warning(self, "Помилка", "Виберіть значення для видалення!")
+        save_button = QPushButton("Зберегти", self)
+        save_button.clicked.connect(self.save_settings)
+        cancel_button = QPushButton("Скасувати", self)
+        cancel_button.clicked.connect(self.close)
+
+        horizontal_buttons_layout = QHBoxLayout()
+        horizontal_buttons_layout.addWidget(save_button)
+        horizontal_buttons_layout.addWidget(cancel_button)
+
+        layout.addLayout(horizontal_buttons_layout)
+        self.setLayout(layout)
+
+    def save_settings(self):
+        self.options.data = deepcopy(self.options_copy.data)
+        del self.options_copy
+        self.options.save_options()
+        self.main_window.do_refresh_widgets()
+        self.accept()

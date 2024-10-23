@@ -1,13 +1,13 @@
 from .menu_bar import MenuBar
-from .date_box import DateBox
+from .edu_date_box import EducationDateBox
 from .edu_format_box import EducationFormatBox
-from .edu_degreee_info_box import DegreeInfoBox
+from .edu_degreee_box import EducationDegreeBox
 from .edu_program_box import EducationProgramBox
 
 __all__ = [
     "MenuBar",
-    "DateBox",
+    "EducationDateBox",
     "EducationFormatBox",
-    "DegreeInfoBox",
+    "EducationDegreeBox",
     "EducationProgramBox",
 ]

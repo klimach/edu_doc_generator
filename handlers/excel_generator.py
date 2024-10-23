@@ -4,6 +4,7 @@ from openpyxl.cell.rich_text import TextBlock, CellRichText
 from copy import copy
 from config.excelConfig import ExcelConfig as Config
 from handlers.helper import Helper
+import roman
 
 class ExcelGenerator:
     def __init__(self, template='.\\templates\\edu_plan_template.xlsx'):
@@ -28,7 +29,7 @@ class ExcelGenerator:
 
     def __set_formulas_to_table(self, worksheet, total_rows):
         for i, row in enumerate(range(Config.TABLE_FIRST_ROW_IDX, Config.TABLE_FIRST_ROW_IDX + total_rows)):
-            worksheet.cell(row, 2).value = Config.COURSE_IDXS[i]
+            worksheet.cell(row, 2).value = roman.toRoman(i + 1)
             for j, column in enumerate(range(Config.FIRST_FORMULAS_COLUMN, Config.LAST_FORMULAS_COLUMN)):
                 val = Config.ROW_FORMULAS[j].format(rowIdx = row)
                 worksheet.cell(row, column).value = val

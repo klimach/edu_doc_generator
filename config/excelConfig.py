@@ -43,5 +43,3 @@ class ExcelConfig:
         summary_holidays_formula,
         summary_total_formula
     ]
-
-    COURSE_IDXS = ['I', 'II', 'III', 'IV', 'V']

@@ -2,24 +2,25 @@ import sys
 from PyQt6.QtWidgets import QMenuBar
 from PyQt6.QtGui import QAction
 
-# from ui.settings_window import SettingsWindow
+from ui.settings_window import SettingsWindow
 
 class MenuBar(QMenuBar):
-    def __init__(self, window):
+    def __init__(self, parent, options):
         super().__init__()
-        self.parent_window = window
+        self.parent_window = parent
+        self.options = options
+        self.setup()
 
-    def install(self):
+    def setup(self):
         menu_bar = self.parent_window.menuBar()
 
         file_menu = menu_bar.addMenu("&Програма")
-        # help_menu = menu_bar.addMenu('&Допомога')
         
-        # exit_action = QAction('&Налаштування', self.parent_window)
-        # exit_action.setStatusTip('Налаштування')
-        # exit_action.setShortcut('Alt+F2')
-        # exit_action.triggered.connect(self.__open_settings_window)
-        # file_menu.addAction(exit_action)
+        exit_action = QAction('&Налаштування', self.parent_window)
+        exit_action.setStatusTip('Налаштування')
+        exit_action.setShortcut('Alt+F2')
+        exit_action.triggered.connect(self.__open_settings_window)
+        file_menu.addAction(exit_action)
         
         exit_action = QAction('&Вихід', self.parent_window)
         exit_action.setStatusTip('Вихід')
@@ -27,8 +28,8 @@ class MenuBar(QMenuBar):
         exit_action.triggered.connect(lambda: sys.exit(self.destroy()))
         file_menu.addAction(exit_action)
 
-    # def __open_settings_window(self):
-    #     self.settings_window = SettingsWindow(self)
-    #     self.settings_window.exec()
+    def __open_settings_window(self):
+        self.settings_window = SettingsWindow(self.options, self.parent_window)
+        self.settings_window.exec()
 
-    #     self.parent_window.refresh()
+        self.parent_window.do_refresh_widgets()
