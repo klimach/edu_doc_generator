@@ -16,11 +16,11 @@ class MenuBar(QMenuBar):
 
         file_menu = menu_bar.addMenu("&Програма")
         
-        exit_action = QAction('&Налаштування', self.parent_window)
-        exit_action.setStatusTip('Налаштування')
-        exit_action.setShortcut('Alt+F2')
-        exit_action.triggered.connect(self.__open_settings_window)
-        file_menu.addAction(exit_action)
+        settings_action = QAction('&Налаштування', self.parent_window)
+        settings_action.setStatusTip('Налаштування')
+        settings_action.setShortcut('Alt+F2')
+        settings_action.triggered.connect(self.__open_settings_window)
+        file_menu.addAction(settings_action)
         
         exit_action = QAction('&Вихід', self.parent_window)
         exit_action.setStatusTip('Вихід')
