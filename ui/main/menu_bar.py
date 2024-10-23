@@ -1,6 +1,6 @@
 import sys
 from PyQt6.QtWidgets import QMenuBar
-from PyQt6.QtGui import QAction
+from PyQt6.QtGui import QAction, QIcon
 
 from ui.settings_window import SettingsWindow
 
@@ -16,13 +16,13 @@ class MenuBar(QMenuBar):
 
         file_menu = menu_bar.addMenu("&Програма")
         
-        settings_action = QAction('&Налаштування', self.parent_window)
+        settings_action = QAction(QIcon("icons\\settings.png"), '&Налаштування', self.parent_window)
         settings_action.setStatusTip('Налаштування')
         settings_action.setShortcut('Alt+F2')
         settings_action.triggered.connect(self.__open_settings_window)
         file_menu.addAction(settings_action)
         
-        exit_action = QAction('&Вихід', self.parent_window)
+        exit_action = QAction(QIcon("icons\\close.png"), '&Вихід', self.parent_window)
         exit_action.setStatusTip('Вихід')
         exit_action.setShortcut('Alt+F4')
         exit_action.triggered.connect(lambda: sys.exit(self.destroy()))
