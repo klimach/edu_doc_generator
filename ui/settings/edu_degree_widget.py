@@ -55,6 +55,8 @@ class EducationDegreeWidget(QWidget):
             }
 
             self.options.add_option("study_levels", new_value)
+            self.new_value.clear()
+            self.new_genitive_value.clear()
             self.populate_values_list()
         else:
             QMessageBox.warning(self, "Помилка", "Для додавання нового значення, поля мають бути заповнені!")

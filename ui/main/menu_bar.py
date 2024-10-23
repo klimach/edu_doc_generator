@@ -31,5 +31,3 @@ class MenuBar(QMenuBar):
     def __open_settings_window(self):
         self.settings_window = SettingsWindow(self.options, self.parent_window)
         self.settings_window.exec()
-
-        self.parent_window.do_refresh_widgets()

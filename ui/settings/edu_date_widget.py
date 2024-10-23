@@ -51,23 +51,30 @@ class EducationDateWidget(QWidget):
     def populate_ranges_list(self):
         self.ranges_list.clear()
         for period in self.options.data["study_periods"]:
-            text = f"{Helper.year_declension(period['years'])} {Helper.month_declension(period['months'])}"
+            text = f"{Helper.year_declension(period['years'])} {Helper.month_declension(period['months'])}".strip()
             item = QListWidgetItem()
             item.setText(text)
             item.setData(Qt.ItemDataRole.UserRole, period)
             self.ranges_list.addItem(item)
 
     def add_range(self):
-        try:
-            new_value = {
-                "years": int(self.years_le.text()),
-                "months": int(self.months_le.text())
-            }
-
-            self.options.add_option("study_periods", new_value)
-            self.populate_ranges_list()
-        except:
+        if self.years_le.text().strip() or self.months_le.text().strip():
+            years = int(self.years_le.text() or 0)
+            months = int(self.months_le.text() or 0)
+            if (years > 0 or months > 0):
+                new_value = {
+                    "years": years,
+                    "months": months
+                }
+                self.options.add_option("study_periods", new_value)
+                self.years_le.clear()
+                self.months_le.clear()
+                self.populate_ranges_list()
+            else:
+                QMessageBox.warning(self, "Помилка", "Період навчання має бути щонайменше 1 місяць")
+        else:
             QMessageBox.warning(self, "Помилка", "Для додавання нового значення, поля мають бути заповнені!")
+            
 
     def remove_range(self):
         selected_item = self.ranges_list.currentItem()

@@ -15,7 +15,7 @@ class ExcelGenerator:
         worksheet = workbook["графік"]
 
         study_period = values['study_period']
-        rows_added = (study_period['years'] + 1 if study_period['months'] > 0 else 0) - 1
+        rows_added = self.calculate_study_years(study_period) - 1
         total_rows = 1 + rows_added
 
         if (rows_added > 0):
@@ -26,7 +26,10 @@ class ExcelGenerator:
         self.__set_formulas_to_table(worksheet, total_rows)
 
         workbook.save(file_path)
-
+    
+    def calculate_study_years(self, study_period): 
+        return study_period['years'] if study_period['months'] == 0 else study_period['years'] + 1
+        
     def __set_formulas_to_table(self, worksheet, total_rows):
         for i, row in enumerate(range(Config.TABLE_FIRST_ROW_IDX, Config.TABLE_FIRST_ROW_IDX + total_rows)):
             worksheet.cell(row, 2).value = roman.toRoman(i + 1)
@@ -73,7 +76,7 @@ class ExcelGenerator:
 
     def __set_input_values_to_worksheet(self, worksheet, values):
         start_edu_year = int(values['start_edu_date'])
-        end_edu_year = start_edu_year + values['study_period']['years'] + 1 if values['study_period']['months'] > 0 else 0
+        end_edu_year = start_edu_year + (self.calculate_study_years(values['study_period']))
         
         worksheet["X9"] = CellRichText(
             TextBlock(

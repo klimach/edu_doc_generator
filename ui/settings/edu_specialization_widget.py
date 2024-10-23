@@ -91,6 +91,8 @@ class EducationSpecializationWidget(QWidget):
             result = filter(lambda f: f["code"] == int(field_num), self.options.data["study_fields"])
             if not any(result):
                 self.options.data["study_fields"].append(new_value)
+                self.field_num.clear()
+                self.field_name.clear()
                 self.populate_field_values_list()
             else:
                 QMessageBox.warning(self, "Помилка", f"Галузь з кодом '{int(field_num)}' вже присутня в списку")
@@ -113,6 +115,9 @@ class EducationSpecializationWidget(QWidget):
             if not any(result):
                 self.options.data["study_fields"][index]["specialties"].append(new_value)
                 self.field_list.currentItem().setData(Qt.ItemDataRole.UserRole, self.options.data["study_fields"][index])
+                self.specialization_num.clear()
+                self.specialization_name.clear()
+                self.specialization_name_genitive.clear()
                 self.populate_specialization_values_list()
             else:
                 QMessageBox.warning(self, "Помилка", f"Спеціальність з кодом '{int(specialization_num)}' вже присутня в списку")

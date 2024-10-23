@@ -24,5 +24,5 @@ class EducationDateBox(QGroupBox):
         self.start_year_spinbox.setRange(2024, 2050)
         self.study_period_dropdown.clear()
         for period in self.options.data["study_periods"]:
-            text = f"{Helper.year_declension(period['years'])} {Helper.month_declension(period['months'])}"
+            text = f"{Helper.year_declension(period['years'])} {Helper.month_declension(period['months'])}".strip()
             self.study_period_dropdown.addItem(text, period)

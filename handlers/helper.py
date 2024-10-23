@@ -1,6 +1,8 @@
 
 class Helper:
     def year_declension(year):
+        if year < 0: raise Exception("Рік має бути більше або дорівнювати 0")
+        if year == 0: return ""
         if year % 10 == 1 and year % 100 != 11:
             return f"{year} рік"
         elif 2 <= year % 10 <= 4 and not (12 <= year % 100 <= 14):
@@ -9,7 +11,8 @@ class Helper:
             return f"{year} років"
         
     def month_declension(month):
-        if not (-1 < month < 13): raise  Exception("Місяць має бути вказаний в діапазоні від 0 до 12")
+        if not (-1 < month < 13): raise Exception("Місяць має бути вказаний в діапазоні від 0 до 12")
+        if month == 0: return ""
         if month == 1:
             return f"{month} місяць"
         elif 2 <= month <= 4:

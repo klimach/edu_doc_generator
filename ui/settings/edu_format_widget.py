@@ -46,6 +46,7 @@ class EducationFormatWidget(QWidget):
         new_value = self.new_value.text().strip()
         if new_value:
             self.options.add_option("study_forms", new_value)
+            self.new_value.clear()
             self.populate_values_list()
         else:
             QMessageBox.warning(self, "Помилка", "Для додавання нового значення, поле мають бути заповнене!")
