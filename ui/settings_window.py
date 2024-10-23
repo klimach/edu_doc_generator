@@ -5,7 +5,7 @@ from copy import deepcopy
 class SettingsWindow(QDialog):
     def __init__(self, options, main_window):
         super().__init__(main_window)
-        self.setWindowTitle("Settings")
+        self.setWindowTitle("Налаштування")
         self.options = options
         self.main_window = main_window
         self.init_ui()
